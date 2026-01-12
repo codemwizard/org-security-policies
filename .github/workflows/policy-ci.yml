@@ -1,0 +1,45 @@
+name: Policy Governance CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  policy-governance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run policy integrity checks
+        run: node .github/tools/policy_lint.js
+
+      - name: Enforce VERSION bump on policy change
+        run: |
+          git fetch origin main
+          POLICY_CHANGED=$(git diff --name-only origin/main...HEAD | grep -E 'secure-coding|ai-enforcement|standards' || true)
+
+          if [ -n "$POLICY_CHANGED" ]; then
+            git diff origin/main...HEAD VERSION || (
+              echo "❌ VERSION must be bumped when policy files change"
+              exit 1
+            )
+          fi
+
+      - name: Enforce approval log update
+        run: |
+          git diff origin/main...HEAD approvals/APPROVAL_LOG.md || (
+            echo "❌ APPROVAL_LOG.md must be updated for policy changes"
+            exit 1
+          )
+
+      - name: Policy governance passed
+        run: echo "✅ Policy governance checks passed"
