@@ -53,3 +53,4 @@ AI SHALL NOT:
 
 AI-generated code failing policy SHALL be rejected.
 Repeated violations revoke AI usage privileges.
+## End

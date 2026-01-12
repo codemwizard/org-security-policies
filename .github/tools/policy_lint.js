@@ -2,7 +2,7 @@ import fs from "fs";
 
 const requiredFiles = [
   "secure-coding/secure_coding_policy.md",
-  "secure-coding/ai_secure_coding_policy.md",
+  "secure-coding/AI_Secure_Coding_Policy.md",
   "ai-enforcement/AI_Lint_Rules.md",
   "VERSION",
   "approvals/APPROVAL_LOG.md"
